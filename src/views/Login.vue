@@ -7,7 +7,7 @@
                 </div>
             </div>
             <footer>
-                Powered by SIA Beta3 v{{version}}
+                Powered by SIA Beta5 v{{version}}
             </footer>
         </div>
         <div class="cuadro2">
