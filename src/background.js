@@ -53,12 +53,12 @@ function createWindow() {
     createProtocol('app')
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
-    //autoUpdater.checkForUpdatesAndNotify()
+    autoUpdater.checkForUpdatesAndNotify()
     //autoUpdater.checkForUpdates()
     //buscarActualizacion()
   }
 
-  actualizacion = setInterval(buscarActualizacion, 5 * 60 * 1000) // para cambiar el tiempo del intervalo em minutos, modificar solo el primer 60
+  //actualizacion = setInterval(buscarActualizacion, 5 * 60 * 1000) // para cambiar el tiempo del intervalo em minutos, modificar solo el primer 60
 
   win.on('closed', () => {
     win = null
@@ -104,7 +104,7 @@ app.on('ready', async () => {
 
 ipcMain.on('app_version', (event)=>{
   event.sender.send('app_version', {version: app.getVersion()})
-  buscarActualizacion()
+  //buscarActualizacion()
 })
 
 ipcMain.on('ok_update', (event)=>{
