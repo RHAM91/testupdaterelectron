@@ -21,13 +21,19 @@ protocol.registerSchemesAsPrivileged([
 
 function buscarActualizacion(){
     autoUpdater.checkForUpdates()
-    autoUpdater.on('update-downloaded', () => {
+    autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
      
-      setTimeout(()=>{ // ESPERA 10 SEGUNDOS PARA ENVIAR EL MENSAJE DE QUE DEBE SER ACTUALIZADA LA APP
-        win.webContents.send('actualizacion', true)
-      }, 10000)
-
-      clearInterval(actualizacion)
+      const dialogOpts = {
+        type: 'info',
+        buttons: ['Restart', 'Later'],
+        title: 'Application Update',
+        message: process.platform === 'win32' ? releaseNotes : releaseName,
+        detail: 'A new version has been downloaded. Restart the application to apply the updates.'
+      }
+    
+      dialog.showMessageBox(dialogOpts).then((returnValue) => {
+        if (returnValue.response === 0) autoUpdater.quitAndInstall()
+      })
 
     })
 }
@@ -55,10 +61,10 @@ function createWindow() {
     win.loadURL('app://./index.html')
     //autoUpdater.checkForUpdatesAndNotify()
     //autoUpdater.checkForUpdates()
-    //buscarActualizacion()
+    buscarActualizacion()
   }
 
-  actualizacion = setInterval(buscarActualizacion, 60 * 60 * 1000) // para cambiar el tiempo del intervalo em minutos, modificar solo el primer 60
+  //actualizacion = setInterval(buscarActualizacion, 60 * 60 * 1000) // para cambiar el tiempo del intervalo em minutos, modificar solo el primer 60
 
   win.on('closed', () => {
     win = null
@@ -104,7 +110,7 @@ app.on('ready', async () => {
 
 ipcMain.on('app_version', (event)=>{
   event.sender.send('app_version', {version: app.getVersion()})
-  buscarActualizacion()
+  //buscarActualizacion()
 })
 
 ipcMain.on('ok_update', (event)=>{
